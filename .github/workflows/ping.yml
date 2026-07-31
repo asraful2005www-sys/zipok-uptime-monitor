@@ -1,0 +1,20 @@
+name: Zipok Daily Uptime Monitor
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  check_site:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Zipok.ir Status
+      run: |
+        status_code=$(curl --write-out %{http_code} --silent --output /dev/null https://zipok.ir)
+        if [ "$status_code" -ne 200 ]; then
+          echo "Site is down! Status code: $status_code"
+          exit 1
+        else
+          echo "Zipok.ir is online and running smoothly."
+        fi
